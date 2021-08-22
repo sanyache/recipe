@@ -1,30 +1,103 @@
 <template>
-  <div id="nav">
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
+  <div class="container">
+    <AddRecipe :onAdd="addRecipe"/>
+
+    <div class="columns">
+      <RecipeList :recipes="recipes" @selectRecipe="selectRecipe"/>
+      <RecipeDetail  :recipe="current" @remove="removeRecipe"/>
+    </div>
+    <UserList />
   </div>
-  <router-view/>
 </template>
 
+<script>
+import AddRecipe from '@/components/AddRecipe'
+import RecipeDetail from '@/components/RecipeDetail'
+import RecipeList from '@/components/RecipeList'
+import UserList from '@/components/UserList'
+export default {
+  name: 'app',
+  components: {
+    AddRecipe,
+    RecipeList,
+    RecipeDetail,
+    UserList,
+  },
+  data() {
+    return{
+      recipes: [],
+      current: null,
+    }
+  },
+  methods: {
+    addRecipe(recipe) {
+      this.recipes.push(recipe);
+    },
+    selectRecipe(id) {
+      this.current = this.recipes.find(x => x.id === id);
+    },
+    removeRecipe(id) {
+      this.recipes = this.recipes.filter(x => x.id !== id);
+      this.current = null;
+    }
+  }
+}
+</script>
+
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-
-#nav {
-  padding: 30px;
-}
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
-}
+  @import url('https://fonts.googleapis.com/css?family=Roboto&display=swap');
+  * {
+    margin: 0;
+    padding: 0;
+  }
+  body {
+    font-family: 'Roboto', sans-serif;
+    color: #222;
+  }
+  a {
+    text-decoration: none;
+    color: darkblue;
+    transition: .3s all ease;
+  }
+  .center {
+    text-align: center;
+  }
+  a:hover {
+    cursor: pointer;
+    opacity: .7;
+    text-decoration: underline;
+  }
+  .container {
+    max-width: 1000px;
+    margin: 0 auto;
+    height: 100vh;
+  }
+  .columns {
+    display: flex;
+  }
+  .detail, .list {
+    width: 50%;
+    border: 1px solid #eee;
+  }
+  .list {
+    border-right: 0;
+  }
+  .btn {
+    border-radius: 5px;
+    background: darkblue;
+    color: #fff;
+    padding: 6px 14px;
+    cursor: pointer;
+  }
+  .btn:disabled {
+    background-color: #eee;
+    color: black;
+    cursor: not-allowed;
+  }
+  .btn.remove {
+    background: darkred;
+  }
+  .btn.secondary{
+    background: grey;
+  }
 </style>
